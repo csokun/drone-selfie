@@ -49,6 +49,7 @@ public class UploadPictureServlet extends HttpServlet {
 			return;
 		if (id.equals(""))
 			return;
+		
 		InputStream inputStream = null;
 		Part filePart = request.getPart("my_file");
 		if (filePart != null) {
@@ -89,6 +90,8 @@ public class UploadPictureServlet extends HttpServlet {
 			String alchemyUrl = "";
 			String apiKey = ConfigUtilities.getSingleton().getAlchemyAPIKey();
 			String bluemixAppName = ConfigUtilities.getSingleton().getBluemixAppName();
+			
+			/*
 			if (bluemixAppName == null) {
 				String host = request.getServerName();
 				alchemyUrl = "http://access.alchemyapi.com/calls/url/URLGetRankedImageFaceTags?url=http://" + host +"/pic?id="
@@ -97,14 +100,18 @@ public class UploadPictureServlet extends HttpServlet {
 			else {
 				alchemyUrl = "http://access.alchemyapi.com/calls/url/URLGetRankedImageFaceTags?url=http://" + bluemixAppName +".mybluemix.net/pic?id="
 						+ id + "&apikey=" + apiKey + "&outputMode=json";
-			}
+			}*/
+			
+		    alchemyUrl = "http://access.alchemyapi.com/calls/url/URLGetRankedImageFaceTags?url=http://ar-drone-selfie.mybluemix.net/pic?id=" + id + "&apikey=1657f33d25d39ff6d226c5547db6190ea8d5af76&outputMode=json";
+			System.out.println("alchemyURL: "+ alchemyUrl);
 			org.apache.http.client.fluent.Request req = Request.Post(alchemyUrl);
 			org.apache.http.client.fluent.Response res = req.execute();
 
 			String output = res.returnContent().asString();
 			Gson gson = new Gson();
-			AlchemyResponse alchemyResponse = gson.fromJson(output,
-					AlchemyResponse.class);
+			
+			AlchemyResponse alchemyResponse = gson.fromJson(output, AlchemyResponse.class);
+			
 			if (alchemyResponse != null) {
 				List<ImageFace> faces = alchemyResponse.getImageFaces();
 				if (faces != null) {
@@ -141,29 +148,32 @@ public class UploadPictureServlet extends HttpServlet {
 						
 						ByteArrayInputStream bis = new ByteArrayInputStream(
 								croppedImage);
+						
 						date = new java.util.Date();
 						uniqueId = String.valueOf(date.getTime());
-						document = new AttachmentDoc(uniqueId,
-								AttachmentDoc.TYPE_PORTRAIT, date);
+						document = new AttachmentDoc(uniqueId, AttachmentDoc.TYPE_PORTRAIT, date);
 						DatabaseUtilities.getSingleton().getDB()
 								.create(document.getId(), document);
 						document = DatabaseUtilities.getSingleton().getDB()
 								.get(AttachmentDoc.class, uniqueId);
-						ais = new AttachmentInputStream(uniqueId, bis,
-								contentType);
+						
+						ais = new AttachmentInputStream(uniqueId, bis, contentType);
 						DatabaseUtilities
 								.getSingleton()
 								.getDB()
-								.createAttachment(uniqueId,
-										document.getRevision(), ais);
+								.createAttachment(uniqueId, document.getRevision(), ais);
 
 						ssession = net.bluemix.droneselfie.SocketEndpoint.currentSession;
 						if (ssession != null) {
 							for (Session session : ssession.getOpenSessions()) {
 								try {
 									if (session.isOpen()) {
-										session.getBasicRemote().sendText(
-												"ppic?id=" + uniqueId);
+										/*
+										 * In addition to portrait url why don't we send a few meta back to client
+										 */
+										ImageTag tag = face.getImageTag();
+										tag.setUrl("pic?id=" + uniqueId);
+										session.getBasicRemote().sendText(tag.toString());
 									}
 								} catch (IOException ioe) {
 									ioe.printStackTrace();

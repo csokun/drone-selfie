@@ -55,3 +55,13 @@ li {
 ul {
   display: initial;
 }
+.reset-right-padding {
+	padding-right: 0px !important;
+}
+.control-button {
+	width: 110px;
+}
+table.controls {
+	 border-spacing: 5px !important;
+	 border-collapse: separate !important;
+}

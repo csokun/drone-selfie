@@ -16,6 +16,7 @@
 <script src="bower/angular-touch/angular-touch.min.js"></script>
 <script src="bower/angularjs-toaster/toaster.min.js"></script>
 <script src="bower/angular-websocket/angular-websocket.min.js"></script>
+<link rel="stylesheet" href="bower/fontawesome/css/font-awesome.css">
 <script src="js/app.js"></script>
 <script src="js/main.js"></script>
 
@@ -26,6 +27,7 @@
 
 <body ng-controller="MainCtrl">
 	<dsnavbar></dsnavbar>
+
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-9">
@@ -35,49 +37,81 @@
 				<div class="row marketing">
 					<toaster-container
 						toaster-options="{'position-class': 'toast-top-full-width'}"></toaster-container>
-					<button type="button" ng-click="takeOff()"
-						class="btn btn-success">Take Off</button>
-					<button type="button" ng-click="land()"
-						class="btn btn-danger">Land</button>
-					<p></p>
-					<button type="button" ng-click="rotatec()"
-						class="btn btn-warning">Rotate clockwise</button>
-					<button type="button" ng-click="rotatecc()"
-						class="btn btn-warning">Rotate counter clockwise</button>
-					<button type="button" ng-click="up()"
-						class="btn btn-warning">Up</button>
-					<button type="button" ng-click="down()"
-						class="btn btn-warning">Down</button>
-					<p></p>
-					<button type="button" ng-click="takePicture()"
-						class="btn btn-primary">Take Picture</button>
 				</div>
-				
+
+
+		<table class="controls">
+				<tr>
+						<td></td>
+						<td>
+							<button type="button" ng-click="up()" class="btn btn-info control-button">
+									<i class="fa fa-3x fa-arrow-circle-up"></i><br />
+								Up</button>
+						</td>
+						<td></td>
+				</tr>
+				<tr>
+					<td>
+							<button type="button" ng-click="rotatecc()" class="btn btn-info control-button">
+								<i class="fa fa-3x fa-undo"></i><br />
+								Turn Left</button>
+					</td>
+					<td>
+						<button type="button" ng-click="takePicture()" class="btn btn-primary control-button">
+							<i class="fa fa-3x fa-camera"></i><br />
+							Take Picture</button>
+					</td>
+					<td class="center">
+						<button type="button" ng-click="rotatec()" class="btn btn-info control-button">
+							<i class="fa fa-3x fa-repeat"></i><br />
+							Turn Right</button>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button type="button" ng-click="takeOff()" class="btn btn-success control-button">
+							<i class="fa fa-3x fa-rocket"></i><br />
+							Take Off</button>
+					</td>
+					<td>
+						<button type="button" ng-click="down()" class="btn btn-info control-button">
+							<i class="fa fa-3x fa-arrow-circle-down"></i><br />
+							Down</button>
+					</td>
+					<td>
+							<button type="button" ng-click="land()" class="btn btn-danger control-button">
+								<i class="fa fa-3x fa-thumbs-up"></i><br />
+								Landing</button>
+					</td>
+				</tr>
+		</table>
+
 				<div ng-show="myData.collection.length > 0">
 					<h2 style="margin-top: 40px">Full Pictures</h2>
 				</div>
+
 				<ul>
-					<li ng-repeat="data in myData.collection"><img
-						ng-src="{{data}}" alt="Description" />
-						<button type="button" ng-click="tweet('{{data}}')"
-							class="btn btn-success">Tweet</button>
+					<li ng-repeat="data in myData.collection">
+						<img ng-src="{{data}}" alt="Description" />
 						<button type="button" ng-click="remove('{{data}}')"
-							class="btn btn-danger">Remove</button></li>
+							class="btn btn-danger">Remove</button>
+						</li>
 				</ul>
-				
+
 				<div ng-show="myData.collection2.length > 0">
 					<h2 style="margin-top: 40px">Portraits</h2>
 				</div>
+
 				<ul>
-					<li ng-repeat="data2 in myData.collection2"><img
-						ng-src="{{data2}}" alt="Description" />
-						<button type="button" ng-click="tweet('{{data2}}')"
-							class="btn btn-success">Tweet</button>
-						<button type="button" ng-click="remove2('{{data2}}')"
+					<li ng-repeat="data2 in myData.collection2">
+						<img ng-src="{{data2.url}}" alt="Description" />
+						<br />Age Rage: {{data.age}}, Gender: {{data.gender}}
+						<button type="button" ng-click="remove2('{{data2.url}}')"
 							class="btn btn-danger">Remove</button></li>
 				</ul>
 				<p></p>
 			</div>
+
 			<div class="col-lg-3">
 				<dsinfo></dsinfo>
 			</div>

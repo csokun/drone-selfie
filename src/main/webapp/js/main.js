@@ -19,9 +19,13 @@ angular
 									message.data.length)
 							collection.push(url);
 						} else {
+							var json = JSON.parse(message.data);
+							collections.push(json);
+							/*
 							var url = message.data.substring(1,
 									message.data.length)
 							collection2.push(url);
+							*/
 						}
 					});
 

@@ -21,6 +21,8 @@ public class ImageFace {
 	private String positionX;
 	private String positionY;
 	private String width;
+	private Gender gender;
+	private Age age;
 
 	public String getHeight() {
 		return height;
@@ -52,5 +54,30 @@ public class ImageFace {
 
 	public void setWidth(String width) {
 		this.width = width;
+	}
+
+	public Age getAge() {
+		return age;
+	}
+
+	public void setAge(Age age) {
+		this.age = age;
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+
+	public void setGender(Gender gender) {
+		this.gender = gender;
+	}
+	
+	public ImageTag getImageTag() {
+		ImageTag tag = new ImageTag();
+		
+		tag.setAge(age.getAgeRange());
+		tag.setGender(gender.getGender());
+		
+		return tag;
 	}
 }
